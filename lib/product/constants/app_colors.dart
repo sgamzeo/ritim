@@ -10,7 +10,7 @@ class AppColors {
 
   static const Color backgroundColor = Color(0xFFFBFBFE);
   static const Color primaryGreyColor = Color(0xFF919191);
-  static Color textFieldDarkFillColor = Colors.black.withOpacity(.2);
+  static Color textFieldDarkFillColor = Colors.black.withValues(alpha: .2);
   static const Color textFieldFillColor = Color(0xFFF1F1F1);
 
   static const Color hintColor = Color.fromARGB(255, 182, 182, 182);

@@ -1,7 +1,7 @@
 part of '../pomodoro_view.dart';
 
 class _RemainingTimeWidget extends BaseGetView<PomodoroController> {
-  const _RemainingTimeWidget({super.key});
+  const _RemainingTimeWidget();
 
   @override
   Widget build(BuildContext context) {
