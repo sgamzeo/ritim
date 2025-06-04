@@ -1,7 +1,7 @@
 part of '../pomodoro_view.dart';
 
-class ResetButtonWidget extends BaseGetView<PomodoroController> {
-  const ResetButtonWidget({super.key});
+class _ResetButtonWidget extends BaseGetView<PomodoroController> {
+  const _ResetButtonWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

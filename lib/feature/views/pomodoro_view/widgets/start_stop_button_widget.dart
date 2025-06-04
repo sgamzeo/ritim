@@ -1,7 +1,7 @@
 part of '../pomodoro_view.dart';
 
-class StartStopButtonWidget extends BaseGetView<PomodoroController> {
-  const StartStopButtonWidget({super.key});
+class _StartStopButtonWidget extends BaseGetView<PomodoroController> {
+  const _StartStopButtonWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -22,14 +22,14 @@ class PomodoroView extends BaseStatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              RemainingTimeWidget(),
+              _RemainingTimeWidget(),
               SizedBox(height: 40.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  StartStopButtonWidget(),
+                  _StartStopButtonWidget(),
                   SizedBox(width: 20.h),
-                  ResetButtonWidget(),
+                  _ResetButtonWidget(),
                 ],
               ),
             ],
