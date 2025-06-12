@@ -5,8 +5,13 @@ class _ResetButtonWidget extends BaseGetView<PomodoroController> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: CustomButton(text: 'Sıfırla', onTap: controller.resetTimer),
+    return CustomButton(
+      text: 'Sıfırla',
+      onTap: () => controller.controlTimer(PomodoroStatus.initial),
+      color: Colors.grey.shade600,
+      textColor: Colors.white,
+      borderRadius: 30,
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
     );
   }
 }

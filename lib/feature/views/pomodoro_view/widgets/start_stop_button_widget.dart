@@ -6,15 +6,17 @@ class _StartStopButtonWidget extends BaseGetView<PomodoroController> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Obx(
-        () => CustomButton(
+      child: Obx(() {
+        final isRunning = controller.status.value == PomodoroStatus.running;
+
+        return CustomButton(
           onTap:
-              controller.isRunning.value
-                  ? controller.pauseTimer
-                  : controller.startTimer,
-          text: controller.isRunning.value ? 'Duraklat' : 'Başlat',
-        ),
-      ),
+              () => controller.controlTimer(
+                isRunning ? PomodoroStatus.paused : PomodoroStatus.running,
+              ),
+          text: isRunning ? 'Duraklat' : 'Başlat',
+        );
+      }),
     );
   }
 }

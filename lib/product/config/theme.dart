@@ -5,7 +5,9 @@ import 'package:ritim/product/constants/app_colors.dart';
 
 class ThemeManager {
   static ThemeData get lightTheme => ThemeData.light().copyWith(
-    scaffoldBackgroundColor: AppColors.dividerColor,
+    scaffoldBackgroundColor: const Color(0xFFEFEFEF),
+    textTheme: GoogleFonts.poppinsTextTheme(),
+    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1976D2)),
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.backgroundColor,
       iconTheme: IconThemeData(color: AppColors.primaryDeepOrange),
