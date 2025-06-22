@@ -10,11 +10,14 @@ class _StartStopButtonWidget extends BaseGetView<PomodoroController> {
         final isRunning = controller.status.value == PomodoroStatus.running;
 
         return CustomButton(
+          text:
+              isRunning
+                  ? LocalizationKeys.pauseTextKey.tr
+                  : LocalizationKeys.startTextKey.tr,
           onTap:
               () => controller.controlTimer(
                 isRunning ? PomodoroStatus.paused : PomodoroStatus.running,
               ),
-          text: isRunning ? 'Duraklat' : 'Başlat',
         );
       }),
     );
