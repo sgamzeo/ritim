@@ -5,11 +5,10 @@ class _ResetButtonWidget extends BaseGetView<PomodoroController> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: CustomButton(
-        text: LocalizationKeys.resetTextKey.tr,
-        onTap: () => controller.controlTimer(PomodoroStatus.initial),
-      ),
+    return CustomButton(
+      text: LocalizationKeys.resetTextKey.tr,
+      onTap: () => controller.controlTimer(PomodoroStatus.initial),
+      controllerTag: 'resetButton',
     );
   }
 }

@@ -1,40 +1,76 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ritim/product/base/base_stateless_widget.dart';
+import 'package:ritim/feature/components/custom_button_controller.dart';
+import 'package:ritim/product/base/base_get_view.dart';
+import 'package:ritim/product/components/scale_factor_autosize_text.dart';
+import 'package:ritim/product/constants/app_border_radius.dart';
+import 'package:ritim/product/constants/app_colors.dart';
+import 'package:ritim/product/constants/app_padding.dart';
 
-class CustomButton extends BaseStatelessWidget {
-  const CustomButton({
-    super.key,
-    required this.text,
-    required this.onTap,
-    this.color,
-    this.textColor,
-    this.borderRadius,
-    this.padding,
-  });
-
+class CustomButton extends BaseGetView<CustomButtonController> {
   final String text;
-  final void Function()? onTap;
-
+  final VoidCallback? onTap;
   final Color? color;
   final Color? textColor;
-  final double? borderRadius;
-  final EdgeInsetsGeometry? padding;
+  final BorderRadiusGeometry? borderRadius;
+  final EdgeInsets? padding;
+
+  CustomButton({
+    super.key,
+    required this.text,
+    this.onTap,
+    this.color = AppColors.white,
+    this.textColor = AppColors.primaryColor,
+    this.borderRadius,
+    this.padding,
+    required String controllerTag,
+  }) : super(controllerTag: controllerTag) {
+    Get.lazyPut<CustomButtonController>(
+      () => CustomButtonController(),
+      tag: controllerTag,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onTap,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color ?? Colors.grey.shade200,
-        foregroundColor: textColor ?? Colors.black87,
-        padding:
-            padding ?? EdgeInsets.symmetric(horizontal: 20.r, vertical: 12.r),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius ?? 12.r),
+    return Obx(
+      () => GestureDetector(
+        onTapDown: (_) => controller.onTapDown(),
+        onTapUp: (_) {
+          controller.onTapUp();
+          onTap?.call();
+        },
+        onTapCancel: () => controller.onTapCancel(),
+        child: Transform.scale(
+          scale: controller.scale.value,
+          child: _buildButtonContainer(),
         ),
-        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
-      child: Text(text),
+    );
+  }
+
+  Widget _buildButtonContainer() {
+    return Container(
+      padding: padding ?? AppPadding.small,
+      decoration: _buildBoxDecoration(),
+      child: _buildButtonText(),
+    );
+  }
+
+  BoxDecoration _buildBoxDecoration() {
+    return BoxDecoration(
+      color: color,
+      borderRadius: borderRadius ?? AppBorderRadius.small,
+    );
+  }
+
+  Widget _buildButtonText() {
+    return Center(
+      child: ScaleFactorAutoSizeText(
+        text: text,
+        style: theme.primaryTextTheme.bodyLarge?.copyWith(
+          color: textColor,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 }
