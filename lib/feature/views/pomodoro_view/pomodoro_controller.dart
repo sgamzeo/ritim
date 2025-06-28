@@ -1,60 +1,55 @@
-import 'package:flutter/animation.dart';
+import 'dart:async';
 import 'package:get/get.dart';
 import 'package:ritim/product/constants/enums.dart';
 import 'package:ritim/product/utils/extensions.dart';
 
-class PomodoroController extends GetxController
-    with GetSingleTickerProviderStateMixin {
-  late AnimationController animationController;
-  final Duration totalDuration = const Duration(minutes: 1);
+class PomodoroController extends GetxController {
+  Timer? _timer;
+  final Rx<Duration> remainingTime = const Duration(minutes: 1).obs;
   Rx<PomodoroStatus> status = PomodoroStatus.initial.obs;
 
-  double get progress => animationController.value;
-  String get formattedTime =>
-      animationController.value.remainingDuration(totalDuration).formatToMMSS();
+  String get formattedTime => remainingTime.value.formattedTime();
 
-  @override
-  void onInit() {
-    super.onInit();
-    animationController = AnimationController(
-      vsync: this,
-      duration: totalDuration,
-    );
+  void controlTimer(PomodoroStatus newStatus) {
+    switch (newStatus) {
+      case PomodoroStatus.initial:
+        _timer?.cancel();
+        remainingTime.value = const Duration(minutes: 1); // veya dinamik süre
+        status.value = PomodoroStatus.initial;
+        break;
+      case PomodoroStatus.running:
+        if (status.value != PomodoroStatus.running) {
+          _startTimer();
+          status.value = PomodoroStatus.running;
+        }
+        break;
+      case PomodoroStatus.paused:
+        if (status.value == PomodoroStatus.running) {
+          _timer?.cancel();
+          status.value = PomodoroStatus.paused;
+        }
+        break;
+      case PomodoroStatus.finished:
+        // İstersen bildirim veya başka işlemler burada olabilir
+        break;
+    }
+  }
 
-    animationController.addStatusListener((animationStatus) {
-      if (animationStatus == AnimationStatus.completed) {
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (remainingTime.value > Duration.zero) {
+        remainingTime.value = remainingTime.value - const Duration(seconds: 1);
+      } else {
+        timer.cancel();
         status.value = PomodoroStatus.finished;
       }
     });
   }
 
-  void controlTimer(PomodoroStatus newStatus) {
-    switch (newStatus) {
-      case PomodoroStatus.initial:
-        animationController.reset();
-        status.value = PomodoroStatus.initial;
-        break;
-      case PomodoroStatus.running:
-        if (!animationController.isAnimating) {
-          animationController.forward(from: animationController.value);
-          status.value = PomodoroStatus.running;
-        }
-        break;
-      case PomodoroStatus.paused:
-        if (animationController.isAnimating) {
-          animationController.stop();
-          status.value = PomodoroStatus.paused;
-        }
-        break;
-      case PomodoroStatus.finished:
-        // TODO: bildirim vb. eklenebilir.
-        break;
-    }
-  }
-
   @override
   void onClose() {
-    animationController.dispose();
+    _timer?.cancel();
     super.onClose();
   }
 }
