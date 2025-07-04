@@ -1,55 +1,34 @@
-import 'dart:async';
 import 'package:get/get.dart';
+import 'package:ritim/product/base/base_getx_controller.dart';
 import 'package:ritim/product/constants/enums.dart';
+import 'package:ritim/product/helpers/audio_player_helper.dart';
+import 'package:ritim/product/services/pomodoro_timer/session_timer_service.dart';
 import 'package:ritim/product/utils/extensions.dart';
 
-class PomodoroController extends GetxController {
-  Timer? _timer;
-  final Rx<Duration> remainingTime = const Duration(minutes: 1).obs;
-  Rx<PomodoroStatus> status = PomodoroStatus.initial.obs;
+class PomodoroController extends BaseGetxController {
+  PomodoroController({required this.timerService});
 
-  String get formattedTime => remainingTime.value.formattedTime();
+  final SessionTimerService timerService;
 
-  void controlTimer(PomodoroStatus newStatus) {
-    switch (newStatus) {
-      case PomodoroStatus.initial:
-        _timer?.cancel();
-        remainingTime.value = const Duration(minutes: 1); // veya dinamik süre
-        status.value = PomodoroStatus.initial;
-        break;
-      case PomodoroStatus.running:
-        if (status.value != PomodoroStatus.running) {
-          _startTimer();
-          status.value = PomodoroStatus.running;
-        }
-        break;
-      case PomodoroStatus.paused:
-        if (status.value == PomodoroStatus.running) {
-          _timer?.cancel();
-          status.value = PomodoroStatus.paused;
-        }
-        break;
-      case PomodoroStatus.finished:
-        // İstersen bildirim veya başka işlemler burada olabilir
-        break;
-    }
+  Rx<Duration> get remainingTime => timerService.state.remainingTime;
+  Rx<PomodoroStatus> get timerStatus => timerService.state.status;
+
+  String get formattedTime => remainingTime.value.toMMSS();
+
+  @override
+  void onInit() {
+    super.onInit();
+    ever(timerStatus, AudioPlayerHelper.handleStatus);
   }
 
-  void _startTimer() {
-    _timer?.cancel();
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (remainingTime.value > Duration.zero) {
-        remainingTime.value = remainingTime.value - const Duration(seconds: 1);
-      } else {
-        timer.cancel();
-        status.value = PomodoroStatus.finished;
-      }
-    });
-  }
+  void start() => timerService.start();
+  void pause() => timerService.pause();
+  void reset() => timerService.reset();
 
   @override
   void onClose() {
-    _timer?.cancel();
+    timerService
+        .onClose(); // optional, timerService bir GetxService olduğu için genelde kapatılmaz
     super.onClose();
   }
 }

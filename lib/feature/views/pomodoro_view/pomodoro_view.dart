@@ -19,30 +19,30 @@ class PomodoroView extends BaseGetView<PomodoroController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Center(
-            child: SingleChildScrollView(
-              padding: AppPadding.large,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _RemainingTimeWidget(),
-                  SizedBox(height: 40.h),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(child: _StartStopButtonWidget()),
-                      SizedBox(width: 16.w),
-                      Expanded(child: _ResetButtonWidget()),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+      body: Container(
+        padding: AppPadding.large,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _RemainingTimeWidget(),
+              SizedBox(height: 40.h),
+              _buildButtons(),
+            ],
           ),
-        ],
+        ),
       ),
+    );
+  }
+
+  Row _buildButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(child: _StartStopButtonWidget()),
+        SizedBox(width: 16.w),
+        Expanded(child: _ResetButtonWidget()),
+      ],
     );
   }
 }
