@@ -10,7 +10,7 @@ class AppViews {
     GetPage(
       name: AppRoutes.pomodoroView,
       page: () => const PomodoroView(),
-      binding: PomodoroBinding(),
+      binding: PomodoroViewBinding(),
     ),
   ];
 }

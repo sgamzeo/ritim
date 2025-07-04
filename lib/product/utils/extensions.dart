@@ -1,13 +1,21 @@
 import 'dart:ui';
 
 import 'package:flutter/painting.dart' show HSLColor;
+import 'package:ritim/product/constants/enums.dart';
 
 extension DurationFormatting on Duration {
-  String formattedTime() {
+  String toMMSS() {
     final minutes = inMinutes.toString().padLeft(2, '0');
     final seconds = (inSeconds % 60).toString().padLeft(2, '0');
     return '$minutes:$seconds';
   }
+}
+
+extension PomodoroStatusHelper on PomodoroStatus {
+  bool get isInitial => this == PomodoroStatus.initial;
+  bool get isRunning => this == PomodoroStatus.running;
+  bool get isPaused => this == PomodoroStatus.paused;
+  bool get isFinished => this == PomodoroStatus.finished;
 }
 
 extension ClampedAlphaExtension on double {
